@@ -3,6 +3,7 @@ Feature: Create Payment
     Background: Empty DB
         Given No records return from GET
     
+    @createTest
     Scenario Outline: <testCase> <PosNeg>
         Given I prepare payment
             | id    | acctNo | amt | transDtm |

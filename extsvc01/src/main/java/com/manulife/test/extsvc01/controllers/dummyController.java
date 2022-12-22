@@ -1,6 +1,7 @@
 package com.manulife.test.extsvc01.controllers;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.manulife.test.extsvc01.models.ErrorResponse;
 import com.manulife.test.extsvc01.models.Payment;
 import com.manulife.test.extsvc01.models.QueryObject;
 import com.manulife.test.extsvc01.repos.PaymentRepo;
@@ -50,7 +53,7 @@ public class dummyController {
         int id = (query.getId() == null) ? 0 : Integer.parseInt(query.getId());
         String acct = (query.getAcctNo() == null) ? "" : query.getAcctNo();
         float amt = (query.getAmt() == null) ? 0 : Float.parseFloat(query.getAmt());
-        Date transDate = new Date();
+        Date transDate = null;
         if(query.getTransDtm() != null){
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             System.out.println(query.getTransDtm());
@@ -60,6 +63,24 @@ public class dummyController {
                 // Do Nothing
             }   
         }
+
+        //custom validation
+        List<String> details = new ArrayList<>();
+        ErrorResponse error = new ErrorResponse("Validation Failed", details);
+        boolean isValid = true;
+        if(amt < 0){
+            details.add("Amount must greater than 0");
+            isValid = false;
+        }
+        if(transDate != null && transDate.after(new Date())){
+            details.add("Transaction date must be a past date");
+            isValid = false;
+        }
+
+        if(!isValid){
+            return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+        }
+
         List<Payment> results = repo.findByQuery(id, acct, amt, transDate);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
