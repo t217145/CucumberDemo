@@ -8,10 +8,12 @@ import java.util.Map;
 public class CommonHTTPSteps {
     private TestContext CONTEXT = TestContext.CONTEXT;
   
-    protected String subPath = "";
+    protected String subPath;
 
-    protected String baseUrl() {
-      return "http://localhost:8080" + subPath;
+    protected String basePath;   
+
+    protected String getLocalSvcUrl() {
+      return basePath + subPath;
     }
   
     protected TestContext getContext() {
@@ -29,7 +31,7 @@ public class CommonHTTPSteps {
     protected void executePost(String apiPath, Map<String, String> pathParams, Map<String, String> queryParamas) {
       final RequestSpecification request = CONTEXT.getRequest();
       final Object payload = CONTEXT.getPayload();
-      final String url = baseUrl() + apiPath;
+      final String url = getLocalSvcUrl() + apiPath;
   
       setPayload(request, payload);
       setQueryParams(pathParams, request);
@@ -48,7 +50,7 @@ public class CommonHTTPSteps {
     protected void executeMultiPartPost(String apiPath) {
       final RequestSpecification request = CONTEXT.getRequest();
       final Object payload = CONTEXT.getPayload();
-      final String url = baseUrl() + apiPath;
+      final String url = getLocalSvcUrl() + apiPath;
   
       Response response = request.multiPart("fuelTransfer", payload, "application/json")
         .log()
@@ -70,7 +72,7 @@ public class CommonHTTPSteps {
     protected void executeDelete(String apiPath, Map<String, String> pathParams, Map<String, String> queryParams) {
       final RequestSpecification request = CONTEXT.getRequest();
       final Object payload = CONTEXT.getPayload();
-      final String url = baseUrl() + apiPath;
+      final String url = getLocalSvcUrl() + apiPath;
   
       setPayload(request, payload);
       setQueryParams(pathParams, request);
@@ -96,7 +98,7 @@ public class CommonHTTPSteps {
     protected void executePut(String apiPath, Map<String, String> pathParams, Map<String, String> queryParams) {
       final RequestSpecification request = CONTEXT.getRequest();
       final Object payload = CONTEXT.getPayload();
-      final String url = baseUrl() + apiPath;
+      final String url = getLocalSvcUrl() + apiPath;
   
       setPayload(request, payload);
       setQueryParams(pathParams, request);
@@ -122,7 +124,7 @@ public class CommonHTTPSteps {
     protected void executePatch(String apiPath, Map<String, String> pathParams, Map<String, String> queryParams) {
       final RequestSpecification request = CONTEXT.getRequest();
       final Object payload = CONTEXT.getPayload();
-      final String url = baseUrl() + apiPath;
+      final String url = getLocalSvcUrl() + apiPath;
   
       setPayload(request, payload);
       setQueryParams(pathParams, request);
@@ -147,7 +149,7 @@ public class CommonHTTPSteps {
   
     protected void executeGet(String apiPath, Map<String, String> pathParams, Map<String, String> queryParams) {
       final RequestSpecification request = CONTEXT.getRequest();
-      final String url = baseUrl() + apiPath;
+      final String url = getLocalSvcUrl() + apiPath;
   
       setQueryParams(pathParams, request);
       setPathParams(queryParams, request);

@@ -20,6 +20,10 @@ import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 
 public class PaymentSteps extends CommonHTTPSteps {
+
+    protected String basePath = "http://localhost:8081";
+
+    protected String subPath = "/payment";
     
     @DataTableType(replaceWithEmptyString = "[blank]")
     public Payment transformer(Map<String, String> row) {
@@ -56,7 +60,8 @@ public class PaymentSteps extends CommonHTTPSteps {
 
     @Before
     public void cleanUp(){
-        subPath = "/payment";
+        super.subPath = subPath;
+        super.basePath = basePath;
         executeDelete("/all");
         Response response = getContext().getResponse();
         assertEquals(202 ,response.getStatusCode());
@@ -64,17 +69,9 @@ public class PaymentSteps extends CommonHTTPSteps {
 
     @Given("No records return from GET")
     public void NoRecord(){
-        subPath = "/payment";
-        executeDelete("/all");
-        Response deleteResponse = getContext().getResponse();
-        assertEquals(202 ,deleteResponse.getStatusCode());
-
         executeGet("");
         Response response = getContext().getResponse();
         assertEquals(200 ,response.getStatusCode());
-
-        // List<Payment> actualPayments = Arrays.asList(response.as(Payment.class));
-        // assertEquals(0, actualPayments.size());
     }
 
     @Given("I prepare payment$")
