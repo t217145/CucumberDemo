@@ -1,10 +1,18 @@
-Feature: Create Payment
+@wrongTest
+Feature: Create Payment in an imperative way
 
     Background: Empty DB
-        Given No records return from GET
+        When I trigger "DELETEALL" request
+        Given I prepare query
+            | id | |
+            | acctNo | |
+            | amt | |
+            | transDtm | |
+        When I trigger "POST" request
+        Then I expect the response is 'OK'
+        But 0 of payment in response testing
     
-    @createTest
-    Scenario Outline: <testCase> <PosNeg> : ESS-3795
+    Scenario Outline: <testCase> <PosNeg>
         Given I prepare payment
             | id    | acctNo | amt | transDtm |
             | [blank] | <acctNo> | <amt> | [blank] |

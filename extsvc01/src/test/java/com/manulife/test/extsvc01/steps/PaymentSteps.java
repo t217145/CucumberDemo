@@ -13,6 +13,7 @@ import com.manulife.test.extsvc01.steps.commons.CommonHTTPSteps;
 import io.cucumber.java.Before;
 import io.cucumber.java.Transpose;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.But;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -62,6 +63,9 @@ public class PaymentSteps extends CommonHTTPSteps {
                 Payment payment = (Payment)(getContext().getPayload());
                 executeDelete(String.format("/%d",payment.getId()));
             break;
+            case "DELETEALL":
+                executeDelete("/all");
+            break;            
             default:
                 break;                        
         }
@@ -90,6 +94,22 @@ public class PaymentSteps extends CommonHTTPSteps {
             default:
                 break;                        
         }
+    }
+
+    @Given("Following records exists in DB")
+    @SuppressWarnings("unchecked")
+    public void PreparePaymentInDB(List<Payment> payments){
+        for (Payment payment : payments) {
+            getContext().setPayload(payment);
+            executePut("");
+        }
+        executeGet("");
+
+        Response response = getContext().getResponse();
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+        List<Payment> actualPayments = response.as(List.class);
+        assertEquals(2, actualPayments.size());    
     }
 
     @And("following payment in response")
@@ -123,23 +143,23 @@ public class PaymentSteps extends CommonHTTPSteps {
     }
 
     @And("{int} of payment in response")
+    @But("{int} of payment in response testing")
+    @SuppressWarnings("unchecked")
     public void CheckNumberOfPayment(int numOfPayment){
         Response response = getContext().getResponse();
         int statusCode = response.getStatusCode();
 
-        if(numOfPayment == 0){
-            if(statusCode >= 200 && statusCode <= 299){
-                List<Payment> actualPayments = Arrays.asList(response.as(Payment.class));
-                assertEquals(numOfPayment, actualPayments.size());
-            } else {
-                ErrorResponse actualError = null;
-                try{
-                    actualError = response.as(ErrorResponse.class);
-                } catch(Exception e) {
-                    //cast failed
-                }
-                assertNotNull(actualError);
+        if(statusCode >= 200 && statusCode <= 299){
+            List<Payment> actualPayments = response.as(List.class);
+            assertEquals(numOfPayment, actualPayments.size());
+        } else {
+            ErrorResponse actualError = null;
+            try{
+                actualError = response.as(ErrorResponse.class);
+            } catch(Exception e) {
+                //cast failed
             }
+            assertNotNull(actualError);
         }
     }
 
@@ -188,5 +208,6 @@ public class PaymentSteps extends CommonHTTPSteps {
                 assertEquals(errorDetails, details.get(0));
             }
         }
-    }      
+    } 
+
 }

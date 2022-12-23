@@ -1,10 +1,20 @@
+@wrongTest
 Feature: Query Payment
 
     Background: Insert some records
-        Given Following records exists in DB
+        Given I prepare payment
             | id    | acctNo | amt | transDtm |
             | [blank] | 012-345-6-000000-0 | 123.45 | [blank] |
-            | [blank] | 012-888-9-123456-7 | 543.21 | [blank] |     
+        
+        When I trigger "PUT" request
+        Then I expect the response is 'CREATED'
+
+        Given I prepare payment
+            | id    | acctNo | amt | transDtm |
+            | [blank] | 012-888-9-123456-7 | 543.21 | [blank] |
+        
+        When I trigger "PUT" request
+        Then I expect the response is 'CREATED'               
             
     @queryTest
     Scenario Outline: <testCase> <PosNeg>

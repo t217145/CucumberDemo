@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.manulife.test.extsvc01.models.ErrorResponse;
 import com.manulife.test.extsvc01.models.Payment;
 import com.manulife.test.extsvc01.models.QueryObject;
@@ -48,6 +47,7 @@ public class dummyController {
     }
 
     @PostMapping("/payment")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public ResponseEntity<List<Payment>> GetPayments(@RequestBody QueryObject query){
         System.out.println(query.toString());
         int id = (query.getId() == null) ? 0 : Integer.parseInt(query.getId());
