@@ -19,7 +19,7 @@ Feature: Query Payment
         And <expectedNumOfReturn> of payment in response
         And <expectedNumOfError> of error in response
         And '<expectedErrorMsg>' in error detail
-        
+
         Examples:
             | testCase | PosNeg | expectedResponse | id | acctNo | amt | transDtm | expectedNumOfReturn | expectedNumOfError | expectedErrorMsg |
             | Search by valid acctNo | Positive | OK | | 012-345-6-000000-0 | | | 1 | 0 | |
