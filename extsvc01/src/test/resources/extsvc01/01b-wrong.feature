@@ -11,7 +11,7 @@ Feature: Create Payment in an imperative way
         When I trigger "POST" request
         Then I expect the response is 'OK'
         But 0 of payment in response testing
-    
+    @createTest
     Scenario Outline: <testCase> <PosNeg>
         Given I prepare payment
             | id    | acctNo | amt | transDtm |

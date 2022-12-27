@@ -68,7 +68,7 @@ public class dummyController {
         List<String> details = new ArrayList<>();
         ErrorResponse error = new ErrorResponse("Validation Failed", details);
         boolean isValid = true;
-        if(amt < 0){
+        if(amt < 0.0){
             details.add("Amount must greater than 0");
             isValid = false;
         }
